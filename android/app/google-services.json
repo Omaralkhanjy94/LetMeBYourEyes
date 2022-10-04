@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "704390507189",
+    "project_id": "letmebeyoureyes",
+    "storage_bucket": "letmebeyoureyes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:704390507189:android:4c0ada85f5d2078d95ecfc",
+        "android_client_info": {
+          "package_name": "com.let.letmeyoureyes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "704390507189-hiled10jn0v5ac2tq541dq5i4r8teppr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7caF-5KSKNVcG6qPw3y0vJ0yirIjeZqQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "704390507189-hiled10jn0v5ac2tq541dq5i4r8teppr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
