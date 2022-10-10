@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 class OpenURL extends StatefulWidget {
@@ -16,7 +17,56 @@ class _OpenURLState extends State<OpenURL> {
         title: const Directionality(
             textDirection: TextDirection.rtl,
             child: Center(child: Text("Open URL in web"))),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.indigo,
+                Colors.indigoAccent,
+                Colors.lightBlue,
+                Colors.cyan,
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+        ),
       ),
+      drawer: Drawer(
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Column(
+                children: [
+                  const Text('Drawer Header'),
+                  const SizedBox(
+                    height: 10,
+                  ),
+
+                ],
+              ),
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.home,
+              ),
+              title: const Text('Log out'),
+              onTap: () {
+                _signOut();
+                Navigator.popAndPushNamed(context, "/splash");
+              },
+            ),
+
+          ],
+        ),
+      ),
+
+
       body: Padding(
 
         padding: const EdgeInsets.all(20.0),
@@ -56,4 +106,7 @@ class _OpenURLState extends State<OpenURL> {
     }
   }
 
+  Future<void> _signOut() async {
+    await FirebaseAuth.instance.signOut();
+  }
 }

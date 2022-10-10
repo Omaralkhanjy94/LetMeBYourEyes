@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
+import 'dart:ui' as ui;
 
 class MapPage extends StatefulWidget {
   MapPage({Key? key, this.title}) : super(key: key);
@@ -20,7 +21,7 @@ class MapPage extends StatefulWidget {
 
 class _MapPageState extends State<MapPage> {
   static const LatLng sourceLocation =
-      LatLng(32.052705521622876, 35.88461650188103);
+  LatLng(32.052705521622876, 35.88461650188103);
   StreamSubscription? _locationSubscription; //stream to put location listening
   final Location _locationTracker = Location();
   Marker? marker;
@@ -29,14 +30,23 @@ class _MapPageState extends State<MapPage> {
   Set<Polyline> pathPolyline = <Polyline>{};
   List<LatLng> lL = <LatLng>[];
 
+  Future<Uint8List?> getBytesFromAsset(String path, int width) async {
+    markerIcon = await getBytesFromAsset('assets/images/flutter.png', 100);
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))?.buffer.asUint8List();
+  }
+
   static const CameraPosition initialLocation = CameraPosition(
     target: sourceLocation,
     zoom: 19.4746,
   );
-
+  Uint8List? markerIcon;
   Future<Uint8List> getMarker() async {
+    // final Marker marker = Marker(icon: BitmapDescriptor.fromBytes(markerIcon!), markerId: null);
     ByteData byteData =
-        await DefaultAssetBundle.of(context).load("assets/images/blindd.png");
+    await DefaultAssetBundle.of(context).load("assets/images/blindd.png");
     return byteData.buffer.asUint8List();
   }
 
@@ -52,7 +62,7 @@ class _MapPageState extends State<MapPage> {
           zIndex: 2,
           flat: true,
           anchor: const Offset(0.5, 0.5),
-          icon: BitmapDescriptor.fromBytes(imageData));
+          icon: BitmapDescriptor.fromBytes(markerIcon!));
       circle = Circle(
           circleId: const CircleId("car"),
           radius: newLocalData.accuracy!,
@@ -89,17 +99,17 @@ class _MapPageState extends State<MapPage> {
 
       _locationSubscription =
           _locationTracker.onLocationChanged.listen((newLocalData) {
-        if (_controller != null) {
-          _controller!.animateCamera(CameraUpdate.newCameraPosition(
-              CameraPosition(
-                  bearing: 90.8334901395799,
-                  target:
+            if (_controller != null) {
+              _controller!.animateCamera(CameraUpdate.newCameraPosition(
+                  CameraPosition(
+                      bearing: 90.8334901395799,
+                      target:
                       LatLng(newLocalData.latitude!, newLocalData.longitude!),
-                  tilt: 0,
-                  zoom: 18.00)));
-          updateMarkerAndCircleAndPath(newLocalData, imageData);
-        }
-      });
+                      tilt: 0,
+                      zoom: 18.00)));
+              updateMarkerAndCircleAndPath(newLocalData, imageData);
+            }
+          });
     } on PlatformException catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
         debugPrint("Permission Denied");
@@ -117,9 +127,7 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.volumeOfSound < 0 || widget.volumeOfSound > 10) {
-      widget.volumeOfSound = 0.1;
-    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Directionality(
@@ -155,19 +163,7 @@ class _MapPageState extends State<MapPage> {
                   const SizedBox(
                     height: 10,
                   ),
-                  const Text(
-                    "volume of sound",
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                  Slider(
-                      value: widget.volumeOfSound,
-                      onChanged: (value) {
-                        setState(() {
-                          widget.volumeOfSound = value;
-                        });
-                      })
+
                 ],
               ),
             ),
@@ -181,15 +177,7 @@ class _MapPageState extends State<MapPage> {
                 Navigator.popAndPushNamed(context, "/splash");
               },
             ),
-            // ListTile(
-            //   leading: const Icon(
-            //     Icons.train,
-            //   ),
-            //   title: const Text('Page 2'),
-            //   onTap: () {
-            //     Navigator.pop(context);
-            //   },
-            // ),
+
           ],
         ),
       ),

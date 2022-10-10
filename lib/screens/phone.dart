@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:letmeyoureyes/screens/verificationPage.dart';
 
 class MyPhone extends StatefulWidget {
   const MyPhone({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class _MyPhoneState extends State<MyPhone> {
 
   @override
   void initState() {
+    // TODO: implement initState
     countryController.text = "+962";
     super.initState();
   }
@@ -68,20 +70,20 @@ class _MyPhoneState extends State<MyPhone> {
               leading: const Icon(
                 Icons.home,
               ),
-              title: const Text('Page 1'),
+              title: const Text('Verify code'),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.popAndPushNamed(context, VerifyCode.pageRoute);
               },
             ),
-            ListTile(
-              leading: const Icon(
-                Icons.train,
-              ),
-              title: const Text('Page 2'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
+            // ListTile(
+            //   leading: const Icon(
+            //     Icons.train,
+            //   ),
+            //   title: const Text('Page 2'),
+            //   onTap: () {
+            //     Navigator.pop(context);
+            //   },
+            // ),
           ],
         ),
       ),
@@ -142,15 +144,15 @@ class _MyPhoneState extends State<MyPhone> {
                     ),
                     Expanded(
                         child: TextField(
-                      onChanged: (number) {
-                        phone = number;
-                      },
-                      keyboardType: TextInputType.phone,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Enter your family phone number.",
-                      ),
-                    ))
+                          onChanged: (number) {
+                            phone = number;
+                          },
+                          keyboardType: TextInputType.phone,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "Phone",
+                          ),
+                        ))
                   ],
                 ),
               ),
@@ -166,18 +168,16 @@ class _MyPhoneState extends State<MyPhone> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10))),
                     onPressed: () async {
+                      // var countrycode;
+
                       await FirebaseAuth.instance.verifyPhoneNumber(
                         phoneNumber: '${countryController.text}$phone',
                         verificationCompleted:
-                            (PhoneAuthCredential credential) {
-                              if(MyPhone.verify.isNotEmpty && credential.verificationId == MyPhone.verify) {
-                                Navigator.pushNamed(context, '/home');
-                              }
-                            },
+                            (PhoneAuthCredential credential) {Navigator.pushNamed(context, VerifyCode.pageRoute);},
                         verificationFailed: (FirebaseAuthException e) {},
                         codeSent: (String verificationId, int? resendToken) {
                           MyPhone.verify = verificationId;
-
+                          Navigator.pushNamed(context, VerifyCode.pageRoute);
                         },
                         codeAutoRetrievalTimeout: (String verificationId) {},
                       );

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:letmeyoureyes/constants/colors.dart';
 
+import 'openurl.dart';
+
 class MainPage extends StatefulWidget {
   static const String pageRoute = "/";
   double volumeOfSound = 0.1;
@@ -141,7 +143,7 @@ class _MainPageState extends State<MainPage> {
                             padding: const EdgeInsets.only(
                                 top: 20, bottom: 20, left: 55, right: 55)),
                         onPressed: () {
-                          Navigator.pushNamed(context, "/otp");
+                          Navigator.pushNamed(context, OpenURL.page_Route);
                         },
                         child: const Text(
                           "blind person",
